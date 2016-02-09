@@ -1,0 +1,11 @@
+video/
+config/
+mAP/
+mfcc/
+temp/
+imtraj/
+keyframes/
+imtraj_list
+vocab
+select.mfcc.csv
+*.model
