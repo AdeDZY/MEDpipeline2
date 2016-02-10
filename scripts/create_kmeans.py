@@ -27,16 +27,13 @@ def transform_feats(km, cluster_num, feats):
 
 def load_feats(feat_csv_file):
     """
-    load sampled features into a matrix X
+    load features into a matrix X
     :param feat_csv_file: path to the mfcc csv file
     :return: X. shape=(n_samples, n_features)
     """
     X = []
-    i = 0
     for line in open(feat_csv_file):
-        i += 1
-        if i % 10 != 0:
-            continue
+        line = line.strip()
         x = [float(val) for val in line.split(';') if val]
         X.append(x)
     return X
@@ -49,7 +46,7 @@ def main():
     parser.add_argument("kmeans_model", help="path to the kmeans model")
     parser.add_argument("cluster_num", type=int, help="number of cluster")
     parser.add_argument("output_file_path", type=str)
-    parser.add_argument("--list_file", "-l", default="~/hw2/list/all.video")
+    parser.add_argument("--list_file", "-l", default="/home/ubuntu/hw2/list/all.video")
     args = parser.parse_args()
 
     # open output file
@@ -62,7 +59,7 @@ def main():
     feat_files = [f for f in listdir(args.feat_csv_dir) if isfile(join(args.feat_csv_dir, f))]
     vid2filepath = {}
     for f in feat_files:
-        video_name = f.split('_')[0]
+        video_name = f.split('.')[0]
         vid2filepath[video_name] = join(args.feat_csv_dir, f)
 
     # process each video
