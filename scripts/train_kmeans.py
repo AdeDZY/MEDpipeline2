@@ -7,15 +7,15 @@ import cPickle
 import argparse
 
 
-def load_sift(sift_file):
+def load_feats(feat_csv_file):
     """
-    load sampled SIFT features into a matrix X
-    :param mfcc_csv_file: path to the mfcc csv file
+    load sampled features into a matrix X
+    :param feat_csv_file: path to the csv file
     :return: X. shape=(n_samples, n_features)
     """
     X = []
     i = 0
-    for line in open(sift_file):
+    for line in open(feat_csv_file):
         line = line.strip()
         i += 1
         x = [float(val) for val in line.split(';') if val]
@@ -25,13 +25,13 @@ def load_sift(sift_file):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("sift_file", help="path to the sift file")
+    parser.add_argument("data_file", help="path to the data file, must in csv format")
     parser.add_argument("cluster_num", type=int, help="number of cluster")
     parser.add_argument("output_file", help="path to save the k-means model")
     args = parser.parse_args()
 
     # load SIFT features
-    X = load_sift(args.sift_file)
+    X = load_feats(args.data_file)
 
     # perform kmeans
     print ">> training K-means on {0} samples...".format(len(X))
