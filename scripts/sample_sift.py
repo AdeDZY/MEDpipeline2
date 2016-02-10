@@ -6,7 +6,7 @@ from os.path import isfile, join
 import random
 
 def main():
-    sift_dir = "~/hw2/sift_features/"
+    sift_dir = "/home/ubuntu/hw2/sift_features/"
     files = [f for f in listdir(sift_dir) if isfile(join(sift_dir, f))]
     fout = open("select.sift", 'w')
     for f in files:
