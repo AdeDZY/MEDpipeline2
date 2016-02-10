@@ -14,10 +14,8 @@ def load_feats(feat_csv_file):
     :return: X. shape=(n_samples, n_features)
     """
     X = []
-    i = 0
     for line in open(feat_csv_file):
         line = line.strip()
-        i += 1
         x = [float(val) for val in line.split(';') if val]
         X.append(x)
     return X
