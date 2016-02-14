@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import numpy as np
 import sys
 import caffe
@@ -18,7 +19,7 @@ def main():
     # load model
     caffe_root = "/home/ubuntu/caffe/"
     model_name = "VGG_ILSVRC_19_layers"
-    net = caffe.Net('{0}/models/{1}/deploy.prototxt'.format(caffe_root, model_name),
+    net = caffe.Net('{0}/models/{1}/{1}_deploy.prototxt'.format(caffe_root, model_name),
                     '{0}/models/{1}/{1}.caffemodel'.format(caffe_root, model_name),
                     caffe.TEST)
 
@@ -30,27 +31,27 @@ def main():
     transformer.set_channel_swap('data', (2, 1, 0))  # the reference model has channels in BGR order instead of RGB
 
     # process each img
-    imgs = [f for f in listdir("/home/ubuntu/hw2/keyframes/") if isfile(join("/home/ubuntu/hw2/keyframes/", f))]
+    imgs = [f for f in listdir("/home/ubuntu/hw2/keyframes2/") if isfile(join("/home/ubuntu/hw2/keyframes2/", f))]
     batch_size = 10
-    i = 0
+    i = 12780 
     while i < len(imgs):
         img_names = []
         n = batch_size
         for j in range(batch_size):
             if i + j >= len(imgs):
-                del net.blobs['data'].data[j:]
                 n = j
                 break
             img = imgs[i + j]
-            img_path = join("/home/ubuntu/hw2/keyframes/", f)
+            img_path = join("/home/ubuntu/hw2/keyframes2/", img)
             img_names.append(img.split('.')[0])
             net.blobs['data'].data[j] = transformer.preprocess('data', caffe.io.load_image(img_path))
         net.forward()
         for j in range(n):
             feat = net.blobs['fc8'].data[j].flat
-            fout = open(args.output_dir + '/{0}.feat'.format(img_names[j]))
+            fout = open(args.output_dir + '/{0}.feat'.format(img_names[j]), 'w')
             fout.write(';'.join([str(v) for v in feat]))
             fout.close()
+        i += batch_size
 
 
 if __name__ == "__main__":
