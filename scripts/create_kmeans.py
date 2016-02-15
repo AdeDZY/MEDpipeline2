@@ -72,6 +72,8 @@ def main():
 
         for frame_file in vid2filepath[video_name]:
             feats = load_feats(frame_file)
+            if not feats:
+                continue
 
             # transform
             v = transform_feats(km, args.cluster_num, feats)
