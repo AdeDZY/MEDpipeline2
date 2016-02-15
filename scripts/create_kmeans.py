@@ -45,51 +45,49 @@ def main():
     parser.add_argument("feat_csv_dir", help="dir of all feature csv files")
     parser.add_argument("kmeans_model", help="path to the kmeans model")
     parser.add_argument("cluster_num", type=int, help="number of cluster")
-    parser.add_argument("output_file_path", type=str)
-    parser.add_argument("--list_file", "-l", default="/home/ubuntu/hw2/list/all.video")
     args = parser.parse_args()
 
     # open output file
-    output_file = open(args.output_file_path, 'w')
+    output_dir = "/home/ubuntu/hw2/siftbow_features/"
 
     # load the kmeans model
     km = cPickle.load(open(args.kmeans_model, "rb"))
 
-    # get all feature file names
+    # get all keyframe SIFT feature file names
     feat_files = [f for f in listdir(args.feat_csv_dir) if isfile(join(args.feat_csv_dir, f))]
     vid2filepath = {}
     for f in feat_files:
-        video_name = f.split('.')[0]
-        vid2filepath[video_name] = join(args.feat_csv_dir, f)
-
-    # process each video
-    n = 0
-    for video_name in open(args.list_file):
-
-        video_name = video_name.strip()
-
+        video_name = f.split('_')[0]
         if video_name not in vid2filepath:
-            print "{}'s features not exist! Write vector as -1".format(video_name)
-            output_file.write(video_name + "\t-1\n")
-            n += 1
-            continue
+            vid2filepath[video_name] = []
+        vid2filepath[video_name].append(join(args.feat_csv_dir, f))
 
-        feats = load_feats(vid2filepath[video_name])
+    # process each video's keyframes
+    # each video will have a result file
+    # each line in the file represents a keyframe
+    n = 0
+    for video_name in vid2filepath:
 
-        # transform
-        v = transform_feats(km, args.cluster_num, feats)
+        output_file = open(join(output_dir, video_name + ".siftbow"), 'w')
 
-        # write new feature
-        output_str = ';'.join([str(t) for t in v])
-        output_file.write(video_name + '\t')
-        output_file.write(output_str + '\n')
+        for frame_file in vid2filepath[video_name]:
+            feats = load_feats(frame_file)
 
-        # output process
+            # transform
+            v = transform_feats(km, args.cluster_num, feats)
+
+            # write new feature
+            output_str = ';'.join([str(t) for t in v])
+            # output_file.write(frame_name + '\t')
+            output_file.write(output_str + '\n')
+
+        output_file.close()
+        # print process
         n += 1
         if n % 50 == 0:
             print "{0} videos processed.".format(n)
 
-    print "K-means features generated successfully! Featues are written into {0}!".format(args.output_file_path)
+    print "K-means features generated successfully! Featues are written into {0}!".format(output_dir)
 
 
 if __name__ == '__main__':
