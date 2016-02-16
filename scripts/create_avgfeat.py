@@ -15,6 +15,7 @@ def avg_feats(feat_file_path):
     :param mfcc_file_path
     :return: vec
     """
+    print feat_file_path
     vec = []
     n = 0
     for line in open(feat_file_path):
@@ -35,7 +36,7 @@ def avg_feats(feat_file_path):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("file_dir", help="the dir of video features")
+    parser.add_argument("feat_dir", help="the dir of video features")
     parser.add_argument("output_file_path", help="the output file")
     args = parser.parse_args()
 
@@ -43,12 +44,12 @@ def main():
     output_file = open(args.output_file_path, 'w')
 
     # get all feature files
-    feat_files = [f for f in listdir(args.feat_csv_dir) if isfile(join(args.feat_dir, f))]
+    feat_files = [f for f in listdir(args.feat_dir) if isfile(join(args.feat_dir, f)) and f.startswith('HVC')]
 
     # process each video
-    for f in open(feat_files):
+    for f in feat_files:
         video_name = f.split('.')[0]
-        feat_file_path = join(args.file_dir, f)
+        feat_file_path = join(args.feat_dir, f)
         vec = avg_feats(feat_file_path)
         output_str = ';'.join([str(t) for t in vec])
         output_file.write(video_name + '\t')
