@@ -15,7 +15,6 @@ def avg_feats(feat_file_path):
     :param mfcc_file_path
     :return: vec
     """
-    print feat_file_path
     vec = []
     n = 0
     for line in open(feat_file_path):
@@ -56,7 +55,7 @@ def main():
     for vid in open(args.list_file):
         vid = vid.strip()
         if vid not in vid2feat:
-            print ">> Feature for {0} does not exist! use -1."
+            print ">> Feature for {0} does not exist! use -1.".format(vid)
             output_str = vid + '\t-1\n'
             output_file.write(output_str)
             continue
