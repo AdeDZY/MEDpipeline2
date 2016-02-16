@@ -15,15 +15,25 @@ video_path=../video   # path to the directory containing all the videos. In this
 #done
 
 
+#for video in $(cat "list/all.video"); 
+#do
+#    echo ${video}
+#    i=0
+#    for line in $(ls ~/hw2/keyframes/${video}_*);
+#    do
+#        let i=i+1
+#        ~/hw2/scripts/extractSift ${line} > ./sift_features/${video}_$(printf "%03d" $i).sift
+#    done
+#done 
+
+    
 for video in $(cat "list/all.video"); 
 do
     echo ${video}
-    i=0
-    for line in $(ls ~/hw2/keyframes/${video}_*);
+    for line in $(ls ~/hw2/frame_cnn_feat/${video}_*);
     do
-        let i=i+1
-        ~/hw2/scripts/extractSift ${line} > ./sift_features/${video}_$(printf "%03d" $i).sift
+        cat ${line} >> cnn_features/${video}.cnn
+        echo ' ' >> cnn_features/${video}.cnn 
     done
 done 
 
-    
