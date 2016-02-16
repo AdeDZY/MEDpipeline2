@@ -37,6 +37,7 @@ def avg_feats(feat_file_path):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("feat_dir", help="the dir of video features")
+    parser.add_argument("list_file", help="a list of all videos")
     parser.add_argument("output_file_path", help="the output file")
     args = parser.parse_args()
 
@@ -44,15 +45,24 @@ def main():
     output_file = open(args.output_file_path, 'w')
 
     # get all feature files
-    feat_files = [f for f in listdir(args.feat_dir) if isfile(join(args.feat_dir, f)) and f.startswith('HVC')]
+    vid2feat = {}
+    for f in listdir(args.feat_dir):
+        if not isfile(join(args.feat_dir, f)) and f.startswith('HVC'):
+            continue
+        video_name = f.split('.')[0]
+        vid2feat[video_name] = join(args.feat_dir, f)
 
     # process each video
-    for f in feat_files:
-        video_name = f.split('.')[0]
-        feat_file_path = join(args.feat_dir, f)
-        vec = avg_feats(feat_file_path)
+    for vid in open(args.list_file):
+        vid = vid.strip()
+        if vid not in vid2feat:
+            print ">> Feature for {0} does not exist! use -1."
+            output_str = vid + '\t-1\n'
+            output_file.write(output_str)
+            continue
+        vec = avg_feats(vid2feat[vid])
         output_str = ';'.join([str(t) for t in vec])
-        output_file.write(video_name + '\t')
+        output_file.write(vid + '\t')
         output_file.write(output_str + '\n')
 
     print "avg features generated successfully! Written into {0}!".format(args.output_file_path)
