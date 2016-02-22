@@ -9,6 +9,28 @@ import sys
 import argparse
 
 
+def load_imtraj_test_data():
+    test_list = open("/home/ubuntu/hw1/list/test.video")
+    X = []
+    y = []
+    for line in test_list:
+        video = line.split()
+        x = [0 for i in range(32768)]
+        try:
+            with open("/home/ubuntu/hw2//home/ubuntu/hw2/imtraj/{0}.spbof".format(video)) as f:
+                line = f.readline()
+                items = line.split()
+                for item in items:
+                    idx, v = item.split(':')
+                    x[int(idx) - 1] = float(v)
+        except IOError:
+            print ">> {0}'s imtraj feature does not exist!".format(video)
+
+        X.append(x)
+
+    return X
+
+
 def load_test_data(feat_file_path, feat_dim):
     """
     Load all test data
@@ -45,6 +67,7 @@ def main():
     parser.add_argument("feat_file", help="feature file")
     parser.add_argument("feat_dim", type=int, help="dimension of features")
     parser.add_argument("output_file", help="path to save the prediction score")
+    parser.add_argument("--feat_type", "-f", choices=["sift", "imtraj", "cnn"], default="sift")
     args = parser.parse_args()
 
     # load model
@@ -52,7 +75,10 @@ def main():
     print clf.get_params()
 
     # load data
-    X = load_test_data(args.feat_file, args.feat_dim)
+    if args.feat_type != 'imtraj':
+        X = load_test_data(args.feat_file, args.feat_dim)
+    else:
+        X = load_imtraj_test_data()
 
     # predict with the log probability
     print ">> Predicting..."
