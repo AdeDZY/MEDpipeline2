@@ -31,8 +31,10 @@ do
     done
 done 
 
-    
 # cnn features (use FC7 layer)
+./scripts/create_cnn.py frame_cnn_fc7_feat/
+
+# put cnn features from the same video into one file    
 for video in $(cat "list/all.video"); 
 do
     echo ${video}
