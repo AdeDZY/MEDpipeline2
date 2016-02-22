@@ -17,7 +17,7 @@ def load_imtraj_training_data(event_name):
         video, label = line.split()
         x = [0 for i in range(32768)]
         try:
-            with open("/home/ubuntu/hw2//home/ubuntu/hw2/imtraj/{0}.spbof".format(video)) as f:
+            with open("/home/ubuntu/hw2/imtraj/{0}.spbof".format(video)) as f:
                 line = f.readline()
                 items = line.split()
                 for item in items:
