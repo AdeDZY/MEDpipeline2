@@ -33,7 +33,7 @@ def main():
     # process each img
     imgs = [f for f in listdir("/home/ubuntu/hw2/keyframes2/") if isfile(join("/home/ubuntu/hw2/keyframes2/", f))]
     batch_size = 10
-    i = 12780 
+    i = 7450 
     while i < len(imgs):
         img_names = []
         n = batch_size
@@ -47,7 +47,7 @@ def main():
             net.blobs['data'].data[j] = transformer.preprocess('data', caffe.io.load_image(img_path))
         net.forward()
         for j in range(n):
-            feat = net.blobs['fc8'].data[j].flat
+            feat = net.blobs['fc7'].data[j].flat
             fout = open(args.output_dir + '/{0}.feat'.format(img_names[j]), 'w')
             fout.write(';'.join([str(v) for v in feat]))
             fout.close()

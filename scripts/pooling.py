@@ -40,7 +40,6 @@ def max_feats(feat_file_path):
     :param feat_file_path
     :return: vec
     """
-    print feat_file_path
     vec = []
     for line in open(feat_file_path):
         vals = line.split(';')

@@ -49,6 +49,7 @@ def main():
 
     # load model
     clf = cPickle.load(open(args.model_file, 'rb'))
+    print clf.get_params()
 
     # load data
     X = load_test_data(args.feat_file, args.feat_dim)

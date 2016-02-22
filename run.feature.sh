@@ -30,10 +30,10 @@ video_path=../video   # path to the directory containing all the videos. In this
 for video in $(cat "list/all.video"); 
 do
     echo ${video}
-    for line in $(ls ~/hw2/frame_cnn_feat/${video}_*);
+    for line in $(ls ~/hw2/frame_cnn_fc7_feat/${video}_*);
     do
-        cat ${line} >> cnn_features/${video}.cnn
-        echo ' ' >> cnn_features/${video}.cnn 
+        cat ${line} >> cnn_fc7_features/${video}.cnn
+        echo ' ' >> cnn_fc7_features/${video}.cnn 
     done
 done 
 
